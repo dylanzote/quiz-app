@@ -33,4 +33,6 @@ export type QuizContextTypes = {
     totalTime: number
     selectedQuizTopic: string
   }
+  userAnswers: Record<number, string>
+  setAnswer: (questionIndex: number, answer: string) => void
 }

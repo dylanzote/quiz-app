@@ -1,88 +1,84 @@
-import { FC, useEffect, useState } from 'react'
-import { AppLogo, CheckIcon, Next, TimerIcon } from '../../config/icons'
-import { useQuiz } from '../../context/QuizContext'
-import { useTimer } from '../../hooks'
-import { ScreenTypes } from '../../types'
-import Button from '../ui/Button'
-import ModalWrapper from '../ui/ModalWrapper'
-import PageCenter from '../ui/PageCenter'
-import Question from './Question'
-import QuizHeader from './QuizHeader'
+import { FC, useEffect, useState } from 'react';
+import { AppLogo, CheckIcon, Next, TimerIcon } from '../../config/icons';
+import { useQuiz } from '../../context/QuizContext';
+import { useTimer } from '../../hooks';
+import { ScreenTypes } from '../../types';
+import Button from '../ui/Button';
+import ModalWrapper from '../ui/ModalWrapper';
+import PageCenter from '../ui/PageCenter';
+import Question from './Question';
+import QuizHeader from './QuizHeader';
 
 const QuestionScreen: FC = () => {
-  const [activeQuestion, setActiveQuestion] = useState<number>(0)
-  const [selectedAnswer, setSelectedAnswer] = useState<string[]>([])
-  const [showTimerModal, setShowTimerModal] = useState<boolean>(false)
-  const [showResultModal, setShowResultModal] = useState<boolean>(false)
+  const [activeQuestion, setActiveQuestion] = useState<number>(0);
+  const [selectedAnswer, setSelectedAnswer] = useState<string>('');
+  const [showTimerModal, setShowTimerModal] = useState<boolean>(false);
+  const [showResultModal, setShowResultModal] = useState<boolean>(false);
 
   const {
     questions,
     quizDetails,
-    result,
-    setResult,
     setCurrentScreen,
     timer,
     setTimer,
     setEndTime,
-  } = useQuiz()
+    setAnswer,
+    userAnswers,
+  } = useQuiz();
 
-  const currentQuestion = questions[activeQuestion]
+  const currentQuestion = questions[activeQuestion];
+  
+  // If no current question, show error or redirect
+  if (!currentQuestion) {
+    console.error('No current question found');
+    return <div>Error: No question found</div>;
+  }
 
-  const { question, type, choices, code, image, correctAnswers } = currentQuestion
+  const { question, choices } = currentQuestion;
 
   const onClickNext = () => {
-    const isMatch: boolean =
-      selectedAnswer.length === correctAnswers.length &&
-      selectedAnswer.every((answer) => correctAnswers.includes(answer))
-
-    // adding selected answer, and if answer matches key to result array with current question
-    setResult([...result, { ...currentQuestion, selectedAnswer, isMatch }])
+    // Save the answer
+    setAnswer(activeQuestion, selectedAnswer);
 
     if (activeQuestion !== questions.length - 1) {
-      setActiveQuestion((prev) => prev + 1)
+      setActiveQuestion((prev) => prev + 1);
+      setSelectedAnswer('');
     } else {
-      // how long does it take to finish the quiz
-      const timeTaken = quizDetails.totalTime - timer
-      setEndTime(timeTaken)
-      setShowResultModal(true)
+      const timeTaken = quizDetails.totalTime - timer;
+      setEndTime(timeTaken);
+      setShowResultModal(true);
     }
-    setSelectedAnswer([])
-  }
+  };
 
   const handleAnswerSelection = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, checked } = e.target
-
-    if (type === 'MAQs') {
-      if (selectedAnswer.includes(name)) {
-        setSelectedAnswer((prevSelectedAnswer) =>
-          prevSelectedAnswer.filter((element) => element !== name)
-        )
-      } else {
-        setSelectedAnswer((prevSelectedAnswer) => [...prevSelectedAnswer, name])
-      }
-    }
-
-    if (type === 'MCQs' || type === 'boolean') {
-      if (checked) {
-        setSelectedAnswer([name])
-      }
-    }
-  }
+    // The value contains the full choice text
+    setSelectedAnswer(e.target.value);
+  };
 
   const handleModal = () => {
-    setCurrentScreen(ScreenTypes.ResultScreen)
-    document.body.style.overflow = 'auto'
-  }
+    setCurrentScreen(ScreenTypes.ResultScreen);
+    document.body.style.overflow = 'auto';
+  };
+
+  // Pre-select answer if user already answered this question
+  useEffect(() => {
+    const previousAnswer = userAnswers[activeQuestion];
+    if (previousAnswer) {
+      setSelectedAnswer(previousAnswer);
+    } else {
+      setSelectedAnswer(''); // Reset if no previous answer
+    }
+  }, [activeQuestion, userAnswers]);
 
   // to prevent scrolling when modal is opened
   useEffect(() => {
     if (showTimerModal || showResultModal) {
-      document.body.style.overflow = 'hidden'
+      document.body.style.overflow = 'hidden';
     }
-  }, [showTimerModal, showResultModal])
+  }, [showTimerModal, showResultModal]);
 
   // timer hooks, handle conditions related to time
-  useTimer(timer, quizDetails, setEndTime, setTimer, setShowTimerModal, showResultModal)
+  useTimer(timer, quizDetails, setEndTime, setTimer, setShowTimerModal, showResultModal);
 
   return (
     <PageCenter>
@@ -97,10 +93,8 @@ const QuestionScreen: FC = () => {
         />
         <Question
           question={question}
-          code={code}
-          image={image}
           choices={choices}
-          type={type}
+          type="MCQs"
           handleAnswerSelection={handleAnswerSelection}
           selectedAnswer={selectedAnswer}
         />
@@ -110,7 +104,7 @@ const QuestionScreen: FC = () => {
             onClick={onClickNext}
             icon={<Next />}
             iconPosition="right"
-            disabled={selectedAnswer.length === 0}
+            disabled={!selectedAnswer}
           />
         </div>
       </div>
@@ -119,14 +113,14 @@ const QuestionScreen: FC = () => {
       {(showTimerModal || showResultModal) && (
         <ModalWrapper
           title={showResultModal ? 'Done!' : 'Your time is up!'}
-          subtitle={`You have attempted ${result.length} questions in total.`}
+          subtitle={`You have completed ${Object.keys(userAnswers).length} questions.`}
           onClick={handleModal}
           icon={showResultModal ? <CheckIcon /> : <TimerIcon />}
-          buttonTitle="SHOW RESULT"
+          buttonTitle="SHOW RESULTS"
         />
       )}
     </PageCenter>
-  )
-}
+  );
+};
 
-export default QuestionScreen
+export default QuestionScreen;
