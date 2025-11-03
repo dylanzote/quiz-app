@@ -7,4 +7,6 @@ import StartIcon from '../assets/icons/start.svg?react'
 import Sun from '../assets/icons/sun.svg?react'
 import Moon from '../assets/icons/moon.svg?react'
 
-export { AppLogo, CheckIcon, Next, Refresh, TimerIcon, StartIcon, Sun, Moon }
+import ClickStyleLogo from '../assets/images/logo_RGB.png'
+
+export { AppLogo, CheckIcon, Next, Refresh, TimerIcon, StartIcon, Sun, Moon, ClickStyleLogo}

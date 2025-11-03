@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react'
-
-import { AppLogo } from '../../config/icons'
+import { ClickStyleLogo } from '../../config/icons'
 import PageCenter from '../ui/PageCenter'
 
 const SplashScreen = () => {
@@ -29,10 +28,13 @@ const SplashScreen = () => {
 
   return (
     <PageCenter justifyCenter>
-      <AppLogo
-        className="text-app-logo transition-all duration-1000"
-        style={{ scale: logoSize }}
-      />
+      <div className="logo-container transition-all duration-1000" style={{ scale: logoSize }}>
+        <img 
+          src={ClickStyleLogo} 
+          alt="Click Style Profile" 
+          className="max-w-[300px] md:max-w-[400px] h-auto"
+        />
+      </div>
     </PageCenter>
   )
 }

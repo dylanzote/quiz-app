@@ -1,5 +1,4 @@
 import { FC, useEffect, useState } from 'react';
-import { AppLogo, CheckIcon, Next, TimerIcon } from '../../config/icons';
 import { useQuiz } from '../../context/QuizContext';
 import { useTimer } from '../../hooks';
 import { ScreenTypes } from '../../types';
@@ -8,6 +7,7 @@ import ModalWrapper from '../ui/ModalWrapper';
 import PageCenter from '../ui/PageCenter';
 import Question from './Question';
 import QuizHeader from './QuizHeader';
+import { CheckIcon, ClickStyleLogo, Next, TimerIcon } from '../../config/icons';
 
 const QuestionScreen: FC = () => {
   const [activeQuestion, setActiveQuestion] = useState<number>(0);
@@ -83,7 +83,13 @@ const QuestionScreen: FC = () => {
   return (
     <PageCenter>
       <div className="text-app-logo mt-3 mb-5 text-center md:my-12">
-        <AppLogo className="w-[185px] md:w-[270px]" />
+        <div className="logo-container mt-3 mb-5 text-center md:my-12">
+          <img 
+            src={ClickStyleLogo} 
+            alt="Click Style Profile" 
+            className="mx-auto max-w-[200px] md:max-w-[250px] h-auto"
+          />
+        </div>
       </div>
       <div className="bg-card-bg relative mb-18 min-h-[500px] w-full rounded-sm p-4 pb-20 md:w-[900px] md:px-14 md:pt-8">
         <QuizHeader

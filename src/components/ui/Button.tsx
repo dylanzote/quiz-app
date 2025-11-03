@@ -7,6 +7,7 @@ interface ButtonTypes {
   icon?: ReactNode
   iconPosition?: 'left' | 'right'
   outline?: boolean
+  secondary?: boolean // New prop for secondary button
   bold?: boolean
   big?: boolean
   disabled?: boolean
@@ -18,6 +19,7 @@ const Button: FC<ButtonTypes> = ({
   icon,
   iconPosition,
   outline,
+  secondary,
   bold,
   big,
   disabled,
@@ -27,12 +29,14 @@ const Button: FC<ButtonTypes> = ({
       onClick={onClick}
       disabled={disabled}
       className={cn(
-        'active:shadow-active-button disabled:bg-disabled-button disabled:text-dark-grey flex min-h-[40px] cursor-pointer items-center justify-center gap-4 rounded-lg text-[16px] active:scale-[0.98] active:transition-all active:duration-200 disabled:transform-[unset] disabled:cursor-not-allowed disabled:shadow-none sm:text-[18px] md:min-h-[50px] md:w-[195px] md:text-[20px] lg:text-[22px] xl:text-[24px]',
+        'active:shadow-active-button disabled:bg-disabled-button disabled:text-dark-grey flex min-h-[50px] cursor-pointer items-center justify-center gap-4 rounded-xl text-[16px] font-semibold active:scale-[0.98] active:transition-all active:duration-200 disabled:transform-[unset] disabled:cursor-not-allowed disabled:shadow-none sm:text-[18px] md:min-h-[60px] md:text-[20px]',
         outline
-          ? 'text-outline-button-text bg-card-bg border-theme-color border'
+          ? 'text-outline-button-text bg-card-bg border-theme-color border-2'
+          : secondary
+          ? 'text-button-text secondary-button-background border-none'
           : 'text-button-text not-disabled:button-background border-none',
-        bold ? 'font-bold' : 'font-normal',
-        big ? 'w-[180px]' : 'w-[150px]',
+        bold ? 'font-bold' : 'font-semibold',
+        big ? 'w-[200px] md:w-[250px]' : 'w-[160px] md:w-[200px]',
       )}
     >
       {icon && iconPosition === 'left' && icon}
