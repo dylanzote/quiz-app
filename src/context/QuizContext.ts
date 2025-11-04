@@ -20,6 +20,7 @@ export const initialState: QuizContextTypes = {
     totalTime: 0,
     selectedQuizTopic: '',
   },
+  
   userAnswers: {},
   setAnswer: () => {},
 }
