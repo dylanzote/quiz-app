@@ -9,7 +9,7 @@ interface AnswerProps {
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
-const Answer: FC<AnswerProps> = ({ onChange, index, choice, type, selectedAnswer }) => {
+const Answer: FC<AnswerProps> = ({ onChange, index, choice, selectedAnswer }) => {
   // Convert index to alphabet character to show ABCD before question
   const label = String.fromCharCode(65 + index);
 

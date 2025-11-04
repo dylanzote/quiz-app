@@ -28,7 +28,6 @@ const Question: FC<QuestionTypes> = ({
             index={index}
             key={index}
             onChange={handleAnswerSelection}
-            type={type}
             selectedAnswer={selectedAnswer}
           />
         ))}
