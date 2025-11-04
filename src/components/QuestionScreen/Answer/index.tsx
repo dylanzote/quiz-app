@@ -4,7 +4,6 @@ import { FC } from 'react';
 interface AnswerProps {
   index: number;
   choice: string;
-  type: string;
   selectedAnswer: string;
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }
