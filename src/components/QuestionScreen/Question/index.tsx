@@ -11,7 +11,6 @@ interface QuestionTypes {
 
 const Question: FC<QuestionTypes> = ({
   question,
-  type,
   choices,
   selectedAnswer,
   handleAnswerSelection,
